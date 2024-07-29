@@ -22,6 +22,7 @@
     "express": "^4.19.2",
     "helmet": "^7.1.0",
     "mongoose": "^8.5.1",
+    "node-cron": "^3.0.3",
     "nodemailer": "^6.9.14"
   },
   "devDependencies": {
@@ -31,6 +32,7 @@
     "@types/jest": "^29.5.12",
     "@types/mongoose": "^5.11.97",
     "@types/node": "^20.14.12",
+    "@types/node-cron": "^3.0.11",
     "@types/nodemailer": "^6.4.15",
     "@typescript-eslint/eslint-plugin": "^7.17.0",
     "@typescript-eslint/parser": "^7.17.0",

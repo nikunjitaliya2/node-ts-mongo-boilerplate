@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import app from './app';
 import { connectDatabase } from './config/database';
 import { logger } from './config/logger';
+import initCrons from "./crons/ index";
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ const startServer = async () => {
         await connectDatabase();
         app.listen(PORT, () => {
             logger.info(`Server is running on port ${PORT}`);
+            initCrons();
         });
     } catch (error) {
         logger.error('Failed to start server:', error);
