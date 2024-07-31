@@ -2,7 +2,7 @@ import { Model, Document } from 'mongoose';
 import { IRepository } from '../interfaces/repository.interface';
 
 export abstract class BaseRepository<T extends Document> implements IRepository<T> {
-    constructor(protected readonly model: Model<T>) {}
+     protected constructor(protected readonly model: Model<T>) {}
 
     async create(data: Partial<T>): Promise<T> {
         const created = new this.model(data);
