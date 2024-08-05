@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Status Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fa;
+            background-image:
+                    linear-gradient(30deg, #f0f0f0 12%, transparent 12.5%, transparent 87%, #f0f0f0 87.5%, #f0f0f0),
+                    linear-gradient(150deg, #f0f0f0 12%, transparent 12.5%, transparent 87%, #f0f0f0 87.5%, #f0f0f0),
+                    linear-gradient(30deg, #f0f0f0 12%, transparent 12.5%, transparent 87%, #f0f0f0 87.5%, #f0f0f0),
+                    linear-gradient(150deg, #f0f0f0 12%, transparent 12.5%, transparent 87%, #f0f0f0 87.5%, #f0f0f0),
+                    linear-gradient(60deg, #f8f8f8 25%, transparent 25.5%, transparent 75%, #f8f8f8 75%, #f8f8f8),
+                    linear-gradient(60deg, #f8f8f8 25%, transparent 25.5%, transparent 75%, #f8f8f8 75%, #f8f8f8);
+            background-size: 80px 140px;
+            background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 600;
+        }
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .card-title {
+            font-size: 1.1em;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+        .card-value {
+            font-size: 1.8em;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .memory-card {
+            grid-column: span 2;
+        }
+        .memory-details {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .memory-item {
+            text-align: center;
+            flex: 1;
+            min-width: 100px;
+            margin-bottom: 10px;
+        }
+        .memory-label {
+            font-size: 0.9em;
+            color: #95a5a6;
+            margin-bottom: 5px;
+        }
+        .memory-value {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #3498db;
+        }
+        .progress-bar {
+            height: 6px;
+            background-color: #ecf0f1;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            width: 0;
+            transition: width 1s ease-in-out;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .info-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .info-label {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        .info-value {
+            font-size: 1em;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .card-value {
+                font-size: 1.5em;
+            }
+            .memory-card {
+                grid-column: span 1;
+            }
+        }
+        @media (max-width: 480px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            .card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Server Status Dashboard</h1>
+    <div class="dashboard">
+        <div class="card">
+            <div class="card-title">Response Time</div>
+            <div class="card-value"><%= responseTime %> ms</div>
+            <div class="progress-bar">
+                <div class="progress" style="width: <%= Math.min(responseTime / 10, 100) %>%;"></div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title">Server Uptime</div>
+            <div class="card-value"><%= uptime %> s</div>
+        </div>
+        <div class="card memory-card">
+            <div class="card-title">Memory Usage</div>
+            <div class="memory-details">
+                <div class="memory-item">
+                    <div class="memory-label">Used</div>
+                    <div class="memory-value"><%= memoryUsageUsed %> MB</div>
+                </div>
+                <div class="memory-item">
+                    <div class="memory-label">Free</div>
+                    <div class="memory-value"><%= memoryUsageFree %> MB</div>
+                </div>
+                <div class="memory-item">
+                    <div class="memory-label">Total</div>
+                    <div class="memory-value"><%= memoryUsageTotal %> MB</div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress" style="width: <%= (memoryUsageUsed / memoryUsageTotal) * 100 %>%;"></div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title">Current Date and Time</div>
+            <div class="card-value"><%= currentDateTime %></div>
+        </div>
+        <div class="card">
+            <div class="card-title">Server Information</div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">OS</div>
+                    <div class="info-value"><%= osInfo.type %> (<%= osInfo.release %>)</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Architecture</div>
+                    <div class="info-value"><%= osInfo.architecture %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">CPU</div>
+                    <div class="info-value"><%= cpuInfo.model %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">CPU Cores</div>
+                    <div class="info-value"><%= cpuInfo.cores %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">IP Address</div>
+                    <div class="info-value"><%= ipAddress %></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // Animate progress bars on load
+    window.onload = function() {
+        const bars = document.querySelectorAll('.progress');
+        bars.forEach(bar => {
+            const width = bar.style.width;
+            bar.style.width = '0';
+            setTimeout(() => {
+                bar.style.width = width;
+            }, 100);
+        });
+    }
+</script>
+</body>
+</html>
