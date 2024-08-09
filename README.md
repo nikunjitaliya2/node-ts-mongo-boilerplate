@@ -64,8 +64,3 @@ A scalable boilerplate for building Node.js applications using TypeScript and Mo
 
 ##Contributing
 Feel free to submit issues, pull requests, or suggestions for improvements. Your contributions are welcome!
-
-
-##Save the file.
-
-This `README.md` provides a comprehensive overview of your project, including features, setup instructions, and folder structure. Adjust any specifics as needed for your project.
